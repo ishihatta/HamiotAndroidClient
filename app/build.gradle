@@ -63,6 +63,7 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:27.1.0')
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-functions-ktx'
+    implementation 'com.google.firebase:firebase-messaging-ktx'
     implementation 'com.journeyapps:zxing-android-embedded:4.2.0'
     compile group: 'xerces', name: 'xercesImpl', version: '2.12.0'
     kapt "com.google.dagger:hilt-android-compiler:2.31-alpha"

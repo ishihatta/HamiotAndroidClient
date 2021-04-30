@@ -4,10 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ishihata_tech.hamiot_client.usecase.CreateNewAccount
-import com.ishihata_tech.hamiot_client.usecase.CreateUserKeyPair
-import com.ishihata_tech.hamiot_client.usecase.GetUserKeyPair
-import com.ishihata_tech.hamiot_client.usecase.StoreUserKeyPair
+import com.ishihata_tech.hamiot_client.usecase.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -21,6 +18,7 @@ class NewAccountViewModel @Inject constructor(
     private val createUserKeyPair: CreateUserKeyPair,
     private val storeUserKeyPair: StoreUserKeyPair,
     private val createNewAccount: CreateNewAccount,
+    private val getFcmToken: GetFcmToken,
 ) : ViewModel() {
     enum class Action {
         GO_TO_MAIN_MENU
@@ -52,18 +50,26 @@ class NewAccountViewModel @Inject constructor(
             // ぐるぐる表示
             _progressDialogShown.value = true
 
-            // キーペア作成
-            val keyPair = createUserKeyPair.invoke()
+            // FCMトークン取得
+            getFcmToken.invoke()?.also { fcmToken ->
 
-            // アカウント作成APIを叩く
-            if (createNewAccount.invoke(Hex.toHexString(keyPair.public.encoded), displayName)) {
-                // キーペアをローカルに保存する
-                storeUserKeyPair.invoke(keyPair)
+                // キーペア作成
+                val keyPair = createUserKeyPair.invoke()
 
-                // メインメニューに遷移する
-                _action.emit(Action.GO_TO_MAIN_MENU)
-            } else {
-                _errorMessage.emit("アカウントの作成に失敗しました")
+                // アカウント作成APIを叩く
+                if (createNewAccount.invoke(
+                        Hex.toHexString(keyPair.public.encoded),
+                        displayName,
+                        fcmToken
+                    )) {
+                    // キーペアをローカルに保存する
+                    storeUserKeyPair.invoke(keyPair)
+
+                    // メインメニューに遷移する
+                    _action.emit(Action.GO_TO_MAIN_MENU)
+                } else {
+                    _errorMessage.emit("アカウントの作成に失敗しました")
+                }
             }
 
             // ぐるぐるを消す

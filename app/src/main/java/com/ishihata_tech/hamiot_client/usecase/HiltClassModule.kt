@@ -42,4 +42,9 @@ abstract class HiltClassModule {
     abstract fun bindTransferAsset(
         transferAssetImpl: TransferAssetImpl
     ): TransferAsset
+
+    @Binds
+    abstract fun bindGetFcmToken(
+        getFcmTokenImpl: GetFcmTokenImpl
+    ): GetFcmToken
 }

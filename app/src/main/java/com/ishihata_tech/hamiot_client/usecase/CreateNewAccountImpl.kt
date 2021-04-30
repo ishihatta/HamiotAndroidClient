@@ -15,13 +15,14 @@ class CreateNewAccountImpl @Inject constructor(
         private const val TAG = "CreateNewAccountImpl"
     }
 
-    override suspend fun invoke(publicKey: String, displayName: String): Boolean {
+    override suspend fun invoke(publicKey: String, displayName: String, fcmToken: String): Boolean {
         return suspendCoroutine { coroutine ->
             firebaseFunctionsRepository.functions
                 .getHttpsCallable("newAccount")
                 .call(hashMapOf(
                     "publicKey" to publicKey,
-                    "displayName" to displayName
+                    "displayName" to displayName,
+                    "fcmToken" to fcmToken
                 ))
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful && task.result != null) {
