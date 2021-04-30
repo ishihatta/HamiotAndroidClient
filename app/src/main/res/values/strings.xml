@@ -1,3 +1,20 @@
 <resources>
     <string name="app_name">HamIOT</string>
+
+    <string name="ok">OK</string>
+    <string name="new_account">New account</string>
+    <string name="display_name">Display name</string>
+    <string name="create_account">Create a new account</string>
+    <string name="scan_qr_code">Scan QR code</string>
+    <string name="unsupported_qr_code">This qr code is not supported</string>
+    <string name="fail_get_balance">Failure to get balance</string>
+    <string name="error_network">Network error</string>
+    <string name="transfer_asset">Transfer asset</string>
+    <string name="transfer_to">Transfer to</string>
+    <string name="amount">Amount</string>
+    <string name="hmt">HMT</string>
+    <string name="transfer">Transfer</string>
+    <string name="successfully_transfer_message">The transfer has successful.</string>
+    <string name="error_invalid_amount">Amount is invalid</string>
+    <string name="error_transfer">Failure to transfer</string>
 </resources>

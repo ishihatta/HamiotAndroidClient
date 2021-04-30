@@ -9,7 +9,12 @@ import dagger.hilt.components.SingletonComponent
 @InstallIn(SingletonComponent::class)
 abstract class HiltClassModule {
     @Binds
-    abstract fun bindUserKeyPairRepository(
-        userKeyPairRepositoryImpl: UserKeyPairRepositoryImpl
-    ): UserKeyPairRepository
+    abstract fun bindUserAccountRepository(
+        userAccountRepositoryImpl: UserAccountRepositoryImpl
+    ): UserAccountRepository
+
+    @Binds
+    abstract fun bindFirebaseFunctionsRepository(
+        firebaseFunctionsRepositoryImpl: FirebaseFunctionsRepositoryImpl
+    ): FirebaseFunctionsRepository
 }

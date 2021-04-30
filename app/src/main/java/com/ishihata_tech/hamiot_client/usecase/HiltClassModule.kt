@@ -22,4 +22,24 @@ abstract class HiltClassModule {
     abstract fun bindStoreUserKeyPair(
         storeUserKeyPairImpl: StoreUserKeyPairImpl
     ): StoreUserKeyPair
+
+    @Binds
+    abstract fun bindCreateNewAccount(
+        createNewAccountImpl: CreateNewAccountImpl
+    ): CreateNewAccount
+
+    @Binds
+    abstract fun bindGetBalance(
+        getBalanceImpl: GetBalanceImpl
+    ): GetBalance
+
+    @Binds
+    abstract fun bindGetDisplayName(
+        getDisplayNameImpl: GetDisplayNameImpl
+    ): GetDisplayName
+
+    @Binds
+    abstract fun bindTransferAsset(
+        transferAssetImpl: TransferAssetImpl
+    ): TransferAsset
 }

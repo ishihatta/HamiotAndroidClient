@@ -1,11 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_navigation_graph"
-    app:startDestination="@id/mainMenuFragment">
+    app:startDestination="@id/newAccountFragment">
 
     <fragment
         android:id="@+id/mainMenuFragment"
         android:name="com.ishihata_tech.hamiot_client.ui.main_menu.MainMenuFragment"
-        android:label="MainMenuFragment" />
+        android:label="MainMenuFragment" >
+        <action
+            android:id="@+id/action_mainMenuFragment_to_transferAssetFragment"
+            app:destination="@id/transferAssetFragment"
+            app:enterAnim="@anim/nav_slide_enter_anim"
+            app:exitAnim="@anim/nav_slide_exit_anim"
+            app:popEnterAnim="@anim/nav_slide_pop_enter_anim"
+            app:popExitAnim="@anim/nav_slide_pop_exit_anim" />
+    </fragment>
+    <fragment
+        android:id="@+id/newAccountFragment"
+        android:name="com.ishihata_tech.hamiot_client.ui.new_account.NewAccountFragment"
+        android:label="new_account_fragment"
+        tools:layout="@layout/new_account_fragment" >
+        <action
+            android:id="@+id/action_newAccountFragment_to_mainMenuFragment"
+            app:destination="@id/mainMenuFragment"
+            app:enterAnim="@anim/nav_slide_enter_anim"
+            app:exitAnim="@anim/nav_slide_exit_anim"
+            app:popUpTo="@id/newAccountFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/transferAssetFragment"
+        android:name="com.ishihata_tech.hamiot_client.ui.transfer_asset.TransferAssetFragment"
+        android:label="transfer_asset_fragment"
+        tools:layout="@layout/transfer_asset_fragment" >
+        <argument
+            android:name="opponentDisplayName"
+            app:argType="string" />
+        <argument
+            android:name="opponentAccountId"
+            app:argType="string" />
+    </fragment>
 </navigation>
