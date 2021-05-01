@@ -17,4 +17,11 @@
     <string name="successfully_transfer_message">The transfer has successful.</string>
     <string name="error_invalid_amount">Amount is invalid</string>
     <string name="error_transfer">Failure to transfer</string>
+
+    <string name="notification_normal_channel_name">Normal notification</string>
+    <string name="notification_normal_channel_description">Notification when sent and received assets</string>
+    <string name="notification_title_when_received">HamIOT Received</string>
+    <string name="notification_title_when_sent">HamIOT Sent</string>
+    <string name="notification_destination_when_received">Received %s HMT from %s</string>
+    <string name="notification_destination_when_sent">Sent %s HMT to %s</string>
 </resources>

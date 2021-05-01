@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ishihata_tech.hamiot_client.R
-import com.ishihata_tech.hamiot_client.usecase.TransferAsset
+import com.ishihata_tech.hamiot_client.usecase.TransferAssetOnServer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TransferAssetViewModel @Inject constructor(
-    private val transferAsset: TransferAsset,
+    private val transferAsset: TransferAssetOnServer,
 ) : ViewModel() {
     enum class Action {
         GO_BACK,

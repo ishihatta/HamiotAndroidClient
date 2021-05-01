@@ -1,6 +1,9 @@
 package com.ishihata_tech.hamiot_client.ui.main_menu
 
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.util.Log
@@ -10,9 +13,11 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.findNavController
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.integration.android.IntentIntegrator
+import com.ishihata_tech.hamiot_client.Constants
 import com.ishihata_tech.hamiot_client.R
 import com.ishihata_tech.hamiot_client.databinding.MainMenuFragmentBinding
 import com.ishihata_tech.hamiot_client.ui.common.ProgressDialogFragment
@@ -29,10 +34,29 @@ class MainMenuFragment : Fragment() {
         private const val PROGRESS_DIALOG_TAG = "progressDialog"
     }
 
+    /**
+     * 残高が変わったことを検知するためのレシーバ
+     */
+    inner class RefreshBalanceBroadcastReceiver : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            viewModel.refreshBalance()
+        }
+    }
+
     private val viewModel: MainMenuViewModel by viewModels()
+    private val localBroadcastManager by lazy { LocalBroadcastManager.getInstance(requireContext()) }
+    private val refreshBalanceBroadcastReceiver = RefreshBalanceBroadcastReceiver()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // 残高の変化を検知する
+        localBroadcastManager.registerReceiver(
+                refreshBalanceBroadcastReceiver,
+                IntentFilter().apply {
+                    addAction(Constants.ACTION_REFRESH_BALANCE)
+                }
+        )
 
         // エラーの監視
         lifecycleScope.launch {
@@ -109,6 +133,11 @@ class MainMenuFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         viewModel.refreshBalance()
+    }
+
+    override fun onDestroy() {
+        localBroadcastManager.unregisterReceiver(refreshBalanceBroadcastReceiver)
+        super.onDestroy()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

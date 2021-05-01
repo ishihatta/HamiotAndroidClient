@@ -15,6 +15,6 @@ abstract class HiltClassModule {
 
     @Binds
     abstract fun bindFirebaseFunctionsRepository(
-        firebaseFunctionsRepositoryImpl: FirebaseFunctionsRepositoryImpl
+            firebaseFunctionsRepositoryImpl: FirebaseFunctionsRepositoryImpl
     ): FirebaseFunctionsRepository
 }

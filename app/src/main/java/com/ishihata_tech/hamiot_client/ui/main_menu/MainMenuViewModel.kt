@@ -46,6 +46,9 @@ class MainMenuViewModel @Inject constructor(
     private val _transferAccountIdAndDisplayName = MutableSharedFlow<Pair<String, String>>()
     val transferAccountIdAndDisplayName: SharedFlow<Pair<String, String>> = _transferAccountIdAndDisplayName
 
+    // 残高の取得中はtrue
+    private var isRefreshingBalance = false
+
     /**
      * QRコードにする内容
      */
@@ -65,12 +68,17 @@ class MainMenuViewModel @Inject constructor(
      * Irohaノードから残高を取得して画面に反映させる
      */
     fun refreshBalance() = viewModelScope.launch {
+        if (isRefreshingBalance) return@launch
+        isRefreshingBalance = true
+
         val irohaBalance = getBalance.invoke()
         if (irohaBalance != null) {
             _balance.value = irohaBalance
         } else {
             _errorMessage.emit(R.string.fail_get_balance)
         }
+
+        isRefreshingBalance = false
     }
 
     /**
