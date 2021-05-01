@@ -7,13 +7,13 @@ import android.os.Build
 import com.ishihata_tech.hamiot_client.R
 
 object MyNotificationChannel {
-    const val CHANNEL_ID = "NormalChannel"
+    const val CHANNEL_ID = "MainChannel"
 
     fun initializeNotificationChannel(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = context.getString(R.string.notification_normal_channel_name)
             val descriptionText = context.getString(R.string.notification_normal_channel_description)
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val importance = NotificationManager.IMPORTANCE_HIGH
             val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
                 description = descriptionText
             }
