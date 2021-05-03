@@ -29,11 +29,11 @@ class GetBalanceImpl @Inject constructor(
                 null
             }
             val assets = response?.accountAssetsResponse?.accountAssetsList
-            Log.d(TAG, "accountId=${userAccountRepository.accountId} assets=$assets")
-            val assetUsdOptional = assets?.find {
-                it.assetId == ASSET_ID
+            if (assets == null) {
+                null
+            } else {
+                assets.find { it.assetId == ASSET_ID }?.balance?.toInt() ?: 0
             }
-            assetUsdOptional?.balance?.toInt()
         } else {
             Log.d(TAG, "irohaAPI is null")
             null
