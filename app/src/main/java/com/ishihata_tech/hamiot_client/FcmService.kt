@@ -9,7 +9,9 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.ishihata_tech.hamiot_client.notification.MyNotificationChannel
+import com.ishihata_tech.hamiot_client.repo.UserAccountRepository
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class FcmService : FirebaseMessagingService() {
@@ -19,37 +21,17 @@ class FcmService : FirebaseMessagingService() {
         private const val NOTIFICATION_ID = 1
     }
 
+    @Inject lateinit var userAccountRepository: UserAccountRepository
+
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         Log.d(TAG, "onMessageReceived: data=${remoteMessage.data}")
 
         remoteMessage.data["type"]?.also { type ->
-            when (type) {
-                "ReceiveAsset" -> { // 送金を受け取った
-                    val amount = remoteMessage.data["amount"]
-                    val opponentDisplayName = remoteMessage.data["opponentDisplayName"]
-                    if (amount != null && opponentDisplayName != null) {
-                        createNotification(
-                                getString(R.string.notification_title_when_received),
-                                getString(R.string.notification_destination_when_received).format(
-                                        amount, opponentDisplayName
-                                )
-                        )
-                    }
-                    notifyRefreshBalance()
-                }
-                "SentAsset" -> {    // 送金に成功した
-                    val amount = remoteMessage.data["amount"]
-                    val opponentDisplayName = remoteMessage.data["opponentDisplayName"]
-                    if (amount != null && opponentDisplayName != null) {
-                        createNotification(
-                                getString(R.string.notification_title_when_sent),
-                                getString(R.string.notification_destination_when_sent).format(
-                                        amount, opponentDisplayName
-                                )
-                        )
-                    }
-                    notifyRefreshBalance()
-                }
+            val amount = remoteMessage.data["amount"]
+            val opponentDisplayName = remoteMessage.data["opponentDisplayName"]
+            val yourAccountId = remoteMessage.data["yourAccountId"]
+            if (amount != null && opponentDisplayName != null && yourAccountId != null) {
+                onHamiotMessageReceived(type, amount, opponentDisplayName, yourAccountId)
             }
         }
     }
@@ -61,6 +43,38 @@ class FcmService : FirebaseMessagingService() {
         LocalBroadcastManager.getInstance(this).sendBroadcast(
                 Intent(Constants.ACTION_REFRESH_BALANCE)
         )
+    }
+
+    /**
+     * HamIOT関連のメッセージを受信したときに呼ばれる
+     */
+    private fun onHamiotMessageReceived(
+            type: String,
+            amount: String,
+            opponentDisplayName: String,
+            yourAccountId: String
+    ) {
+        // アカウントIDがログイン中のアカウントと一致するか確認する
+        if (yourAccountId != userAccountRepository.accountId) {
+            Log.d(TAG, "onHamiotMessageReceived: accountId does not match")
+            return
+        }
+
+        // 通知を表示する
+        val (resIdTitle, resIdDescription) = if (type == "ReceiveAsset") {
+            Pair(R.string.notification_title_when_received, R.string.notification_title_when_sent)
+        } else {
+            Pair(R.string.notification_destination_when_received, R.string.notification_destination_when_sent)
+        }
+        createNotification(
+                getString(resIdTitle),
+                getString(resIdDescription).format(
+                        amount, opponentDisplayName
+                )
+        )
+
+        // 残高が変わったことをブロードキャストする
+        notifyRefreshBalance()
     }
 
     /**
