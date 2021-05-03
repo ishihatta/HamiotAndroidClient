@@ -2,9 +2,12 @@
     <string name="app_name">HamIOT</string>
 
     <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
     <string name="new_account">New account</string>
     <string name="display_name">Display name</string>
     <string name="create_account">Create a new account</string>
+    <string name="restore_account">Restore backup account</string>
+    <string name="or">OR</string>
     <string name="scan_qr_code">Scan QR code</string>
     <string name="unsupported_qr_code">This qr code is not supported</string>
     <string name="fail_get_balance">Failure to get balance</string>
@@ -15,8 +18,14 @@
     <string name="hmt">HMT</string>
     <string name="transfer">Transfer</string>
     <string name="successfully_transfer_message">The transfer has successful.</string>
+    <string name="logout_confirm_message">Do you want to log out?</string>
+    <string name="successfully_backup_account">The backup file was created successfully.</string>
+
+    <string name="error_create_account">Failure to create new account</string>
     <string name="error_invalid_amount">Amount is invalid</string>
     <string name="error_transfer">Failure to transfer</string>
+    <string name="error_backup_account">Failure to backup account file</string>
+    <string name="error_restore_account">Failure to restore account</string>
 
     <string name="notification_normal_channel_name">Normal notification</string>
     <string name="notification_normal_channel_description">Notification when sent and received assets</string>
@@ -24,4 +33,8 @@
     <string name="notification_title_when_sent">HamIOT Sent</string>
     <string name="notification_destination_when_received">Received %s HMT from %s</string>
     <string name="notification_destination_when_sent">Sent %s HMT to %s</string>
+
+    <string name="main_menu_item_history">History</string>
+    <string name="main_menu_item_backup">Backup account</string>
+    <string name="main_menu_item_logout">Logout</string>
 </resources>

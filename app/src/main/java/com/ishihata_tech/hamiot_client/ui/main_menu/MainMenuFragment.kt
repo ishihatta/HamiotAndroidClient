@@ -1,5 +1,6 @@
 package com.ishihata_tech.hamiot_client.ui.main_menu
 
+import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -9,6 +10,9 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -28,10 +32,12 @@ import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
-class MainMenuFragment : Fragment() {
+class MainMenuFragment : Fragment(), LogoutDialogFragment.Listener {
     companion object {
         private const val TAG = "MainMenuFragment"
         private const val PROGRESS_DIALOG_TAG = "progressDialog"
+        private const val LOGOUT_DIALOG_TAG = "logoutDialog"
+        private const val BACKUP_DIALOG_TAG = "backupDialog"
     }
 
     /**
@@ -47,16 +53,29 @@ class MainMenuFragment : Fragment() {
     private val localBroadcastManager by lazy { LocalBroadcastManager.getInstance(requireContext()) }
     private val refreshBalanceBroadcastReceiver = RefreshBalanceBroadcastReceiver()
 
+    /**
+     * アカウントのバックアップ先選択画面のコールバック
+     */
+    private val filePickerCallback =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult? ->
+                val uri = result?.data?.data
+                if (result?.resultCode == Activity.RESULT_OK && uri != null) {
+                    if (viewModel.backupAccount(uri)) {
+                        // 成功
+                        BackupSuccessDialogFragment().showNow(childFragmentManager, BACKUP_DIALOG_TAG)
+                    } else {
+                        // 失敗
+                        Toast.makeText(
+                                requireContext(),
+                                R.string.error_backup_account,
+                                Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // 残高の変化を検知する
-        localBroadcastManager.registerReceiver(
-                refreshBalanceBroadcastReceiver,
-                IntentFilter().apply {
-                    addAction(Constants.ACTION_REFRESH_BALANCE)
-                }
-        )
 
         // エラーの監視
         lifecycleScope.launch {
@@ -88,21 +107,39 @@ class MainMenuFragment : Fragment() {
                 )
             }
         }
+
+        // アクションの監視
+        lifecycleScope.launch {
+            viewModel.action.collect {
+                when (it) {
+                    MainMenuViewModel.Action.BACK_TO_ROOT -> {
+                        findNavController().apply {
+                            popBackStack()
+                            navigate(R.id.newAccountFragment)
+                        }
+                    }
+                }
+            }
+        }
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View {
         val binding = DataBindingUtil.inflate<MainMenuFragmentBinding>(
-            inflater,
-            R.layout.main_menu_fragment,
-            container,
-            false
+                inflater,
+                R.layout.main_menu_fragment,
+                container,
+                false
         ).also {
             it.lifecycleOwner = this
             it.viewModel = viewModel
         }
+
+        // ツールバー
+        (requireActivity() as AppCompatActivity).setSupportActionBar(binding.toolbar)
+        setHasOptionsMenu(true)
 
         // 残高を表示する
         viewModel.balance.observe(viewLifecycleOwner) {
@@ -113,7 +150,7 @@ class MainMenuFragment : Fragment() {
         try {
             val barcodeEncoder = BarcodeEncoder()
             val bitmap = barcodeEncoder.encodeBitmap(
-                viewModel.qrCodeContent, BarcodeFormat.QR_CODE, 256, 256
+                    viewModel.qrCodeContent, BarcodeFormat.QR_CODE, 256, 256
             )
             val drawable = BitmapDrawable(resources, bitmap)
             drawable.isFilterBitmap = false
@@ -133,11 +170,19 @@ class MainMenuFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         viewModel.refreshBalance()
+
+        // 残高の変化を検知する
+        localBroadcastManager.registerReceiver(
+                refreshBalanceBroadcastReceiver,
+                IntentFilter().apply {
+                    addAction(Constants.ACTION_REFRESH_BALANCE)
+                }
+        )
     }
 
-    override fun onDestroy() {
+    override fun onPause() {
         localBroadcastManager.unregisterReceiver(refreshBalanceBroadcastReceiver)
-        super.onDestroy()
+        super.onPause()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -145,5 +190,38 @@ class MainMenuFragment : Fragment() {
         result?.contents?.also { contents ->
             viewModel.onScanQr(contents)
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        Log.d(TAG, "onCreateOptionsMenu")
+        inflater.inflate(R.menu.main_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.item_history -> {
+                true
+            }
+            R.id.item_backup -> {
+
+                filePickerCallback.launch(Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+                    addCategory(Intent.CATEGORY_OPENABLE)
+                    type = "text/json"
+                    putExtra(Intent.EXTRA_TITLE, "hamiot_account.json")
+                })
+                true
+            }
+            R.id.item_logout -> {
+                Log.d(TAG, "Logout")
+                LogoutDialogFragment().showNow(childFragmentManager, LOGOUT_DIALOG_TAG)
+                true
+            }
+            else -> false
+        }
+    }
+
+    // ログアウトダイアログのOKボタンが押されたら呼ばれる
+    override fun onDoLogout() {
+        viewModel.logout()
     }
 }

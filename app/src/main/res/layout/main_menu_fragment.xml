@@ -18,11 +18,11 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
-            android:minHeight="?attr/actionBarSize"
-            android:theme="?attr/actionBarTheme"
-            app:titleTextColor="?attr/colorOnPrimary"
             app:layout_constraintTop_toTopOf="parent"
+            android:background="?attr/statusBarBackground"
+            android:elevation="4dp"
+            android:theme="@style/ThemeOverlay.AppCompat.DayNight.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.DayNight"
             app:title="@string/app_name" />
 
         <TextView

@@ -30,6 +30,8 @@ class GetDisplayNameImpl @Inject constructor(
                                     coroutine.resume(displayName)
                                     return@addOnCompleteListener
                                 }
+                            } else {
+                                Log.d(TAG, "onComplete: data=$data")
                             }
                         }
                     } else {

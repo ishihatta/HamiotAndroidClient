@@ -3,6 +3,7 @@ package com.ishihata_tech.hamiot_client.ui.transfer_asset
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
@@ -77,6 +78,9 @@ class TransferAssetFragment : Fragment(), SuccessDialogFragment.Listener {
             it.lifecycleOwner = this
             it.viewModel = viewModel
         }
+
+        // ツールバー
+        (requireActivity() as AppCompatActivity).setSupportActionBar(binding.toolbar)
 
         // 送金相手の表示名
         binding.textOpponentName.text = args.opponentDisplayName

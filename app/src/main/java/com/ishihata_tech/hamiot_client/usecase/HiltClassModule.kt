@@ -4,6 +4,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import iroha.protocol.Commands
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -52,4 +53,24 @@ abstract class HiltClassModule {
     abstract fun bindGetFcmToken(
         getFcmTokenImpl: GetFcmTokenImpl
     ): GetFcmToken
+
+    @Binds
+    abstract fun bindBackupAccount(
+            backupAccountImpl: BackupAccountImpl
+    ): BackupAccount
+
+    @Binds
+    abstract fun bindRestoreAccount(
+            restoreAccountImpl: RestoreAccountImpl
+    ): RestoreAccount
+
+    @Binds
+    abstract fun bindSetIrohaAccountDetail(
+            setIrohaAccountDetailImpl: SetIrohaAccountDetailImpl
+    ): SetIrohaAccountDetail
+
+    @Binds
+    abstract fun bindGetIrohaAccountDetail(
+            getIrohaAccountDetailImpl: GetIrohaAccountDetailImpl
+    ): GetIrohaAccountDetail
 }

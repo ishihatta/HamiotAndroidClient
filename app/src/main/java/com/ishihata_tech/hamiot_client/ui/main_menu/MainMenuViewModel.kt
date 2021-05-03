@@ -1,5 +1,6 @@
 package com.ishihata_tech.hamiot_client.ui.main_menu
 
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -7,8 +8,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ishihata_tech.hamiot_client.R
 import com.ishihata_tech.hamiot_client.repo.UserAccountRepository
+import com.ishihata_tech.hamiot_client.usecase.BackupAccount
 import com.ishihata_tech.hamiot_client.usecase.GetBalance
 import com.ishihata_tech.hamiot_client.usecase.GetDisplayName
+import com.ishihata_tech.hamiot_client.usecase.SetIrohaAccountDetail
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -21,10 +24,20 @@ class MainMenuViewModel @Inject constructor(
         private val getBalance: GetBalance,
         private val getDisplayName: GetDisplayName,
         private val userAccountRepository: UserAccountRepository,
+        private val backupAccount: BackupAccount,
+        private val setIrohaAccountDetail: SetIrohaAccountDetail,
 ) : ViewModel() {
     companion object {
         private const val TAG = "MainMenuViewModel"
     }
+
+    enum class Action {
+        BACK_TO_ROOT
+    }
+
+    // アクション
+    private val _action = MutableSharedFlow<Action>()
+    val action: SharedFlow<Action> = _action
 
     // 残高
     private val _balance = MutableLiveData(0)
@@ -117,5 +130,33 @@ class MainMenuViewModel @Inject constructor(
 
         // 送金画面に遷移する
         _transferAccountIdAndDisplayName.emit(Pair(accountId, opponentDisplayName))
+    }
+
+    /**
+     * ログアウトするために保存されているユーザデータを削除する
+     */
+    fun logout() = viewModelScope.launch {
+        // ぐるぐる表示
+        _progressDialogShown.value = true
+
+        // サーバに登録してある FCM トークンを消す
+        val result = setIrohaAccountDetail.invoke("fcmToken", "")
+
+        // ぐるぐるを消す
+        _progressDialogShown.value = false
+
+        if (result) {
+            userAccountRepository.clear()
+            _action.emit(Action.BACK_TO_ROOT)
+        } else {
+            _errorMessage.emit(R.string.error_network)
+        }
+    }
+
+    /**
+     * アカウントデータを保存する
+     */
+    fun backupAccount(uri: Uri): Boolean {
+        return backupAccount.invoke(uri)
     }
 }

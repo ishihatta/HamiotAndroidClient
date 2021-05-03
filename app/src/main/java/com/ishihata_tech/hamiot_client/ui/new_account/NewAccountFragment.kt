@@ -1,9 +1,14 @@
 package com.ishihata_tech.hamiot_client.ui.new_account
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -22,6 +27,14 @@ class NewAccountFragment : Fragment() {
     }
 
     private val viewModel: NewAccountViewModel by viewModels()
+
+    private val filePickerCallback =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult? ->
+                val uri = result?.data?.data
+                if (result?.resultCode == Activity.RESULT_OK && uri != null) {
+                    viewModel.restoreAccount(uri)
+                }
+            }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,7 +63,7 @@ class NewAccountFragment : Fragment() {
         viewModel.progressDialogShown.observe(this) {
             when (it) {
                 true -> {
-                    ProgressDialogFragment().showNow(parentFragmentManager, PROGRESS_DIALOG_TAG)
+                    ProgressDialogFragment().show(parentFragmentManager, PROGRESS_DIALOG_TAG)
                 }
                 false -> {
                     (parentFragmentManager.findFragmentByTag(PROGRESS_DIALOG_TAG) as? ProgressDialogFragment)?.dismiss()
@@ -68,11 +81,23 @@ class NewAccountFragment : Fragment() {
             it.viewModel = viewModel
         }
 
+        // ツールバー
+        (requireActivity() as AppCompatActivity).setSupportActionBar(binding.toolbar)
+
+        // 送信ボタン
         binding.buttonSubmit.setOnClickListener {
             val displayName = binding.editName.text.toString().trim()
             if (displayName.isNotEmpty()) {
                 viewModel.createNewAccount(displayName)
             }
+        }
+
+        // リストアボタン
+        binding.buttonRestore.setOnClickListener {
+            filePickerCallback.launch(Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+                addCategory(Intent.CATEGORY_OPENABLE)
+                type = "text/json"
+            })
         }
 
         return binding.root

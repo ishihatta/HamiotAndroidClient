@@ -18,10 +18,10 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
-            android:minHeight="?attr/actionBarSize"
-            android:theme="?attr/actionBarTheme"
-            app:titleTextColor="?attr/colorOnPrimary"
+            android:background="?attr/statusBarBackground"
+            android:elevation="4dp"
+            android:theme="@style/ThemeOverlay.AppCompat.DayNight.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.DayNight"
             app:layout_constraintTop_toTopOf="parent"
             app:title="@string/new_account" />
 
@@ -31,6 +31,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@+id/toolbar"
             app:layout_constraintBottom_toTopOf="@+id/button_submit"
+            app:layout_constraintVertical_chainStyle="packed"
             android:layout_marginHorizontal="20dp"
             android:hint="@string/display_name"
             android:singleLine="true"
@@ -40,9 +41,30 @@
             android:id="@+id/button_submit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edit_name"
+            app:layout_constraintBottom_toTopOf="@+id/text_or"
             android:layout_marginHorizontal="20dp"
             android:text="@string/create_account" />
+
+        <TextView
+            android:id="@+id/text_or"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/button_submit"
+            app:layout_constraintBottom_toTopOf="@+id/button_restore"
+            android:layout_marginVertical="20dp"
+            android:gravity="center"
+            android:text="@string/or"/>
+
+        <Button
+            android:id="@+id/button_restore"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/text_or"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginHorizontal="20dp"
+            android:text="@string/restore_account"
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
