@@ -20,6 +20,10 @@
     <string name="successfully_transfer_message">The transfer has successful.</string>
     <string name="logout_confirm_message">Do you want to log out?</string>
     <string name="successfully_backup_account">The backup file was created successfully.</string>
+    <string name="history">History</string>
+    <string name="received">Received</string>
+    <string name="sent">Sent</string>
+    <string name="more">More</string>
 
     <string name="error_create_account">Failure to create new account</string>
     <string name="error_invalid_amount">Amount is invalid</string>

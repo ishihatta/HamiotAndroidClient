@@ -73,4 +73,9 @@ abstract class HiltClassModule {
     abstract fun bindGetIrohaAccountDetail(
             getIrohaAccountDetailImpl: GetIrohaAccountDetailImpl
     ): GetIrohaAccountDetail
+
+    @Binds
+    abstract fun bindGetAssetTransactions(
+            getAssetTransactionsImpl: GetAssetTransactionsImpl
+    ): GetAssetTransactions
 }

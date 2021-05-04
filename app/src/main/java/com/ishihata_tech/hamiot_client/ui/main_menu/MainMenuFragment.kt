@@ -200,10 +200,11 @@ class MainMenuFragment : Fragment(), LogoutDialogFragment.Listener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.item_history -> {
+                findNavController().navigate(
+                    MainMenuFragmentDirections.actionMainMenuFragmentToHistoryFragment())
                 true
             }
             R.id.item_backup -> {
-
                 filePickerCallback.launch(Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
                     addCategory(Intent.CATEGORY_OPENABLE)
                     type = "text/json"

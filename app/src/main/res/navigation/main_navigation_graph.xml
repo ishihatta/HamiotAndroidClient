@@ -16,6 +16,13 @@
             app:exitAnim="@anim/nav_slide_exit_anim"
             app:popEnterAnim="@anim/nav_slide_pop_enter_anim"
             app:popExitAnim="@anim/nav_slide_pop_exit_anim" />
+        <action
+            android:id="@+id/action_mainMenuFragment_to_historyFragment"
+            app:destination="@id/historyFragment"
+            app:enterAnim="@anim/nav_slide_enter_anim"
+            app:exitAnim="@anim/nav_slide_exit_anim"
+            app:popEnterAnim="@anim/nav_slide_pop_enter_anim"
+            app:popExitAnim="@anim/nav_slide_pop_exit_anim" />
     </fragment>
     <fragment
         android:id="@+id/newAccountFragment"
@@ -42,4 +49,9 @@
             android:name="opponentAccountId"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/historyFragment"
+        android:name="com.ishihata_tech.hamiot_client.ui.history.HistoryFragment"
+        android:label="history_fragment"
+        tools:layout="@layout/history_fragment" />
 </navigation>

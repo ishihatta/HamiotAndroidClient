@@ -3,9 +3,11 @@ package com.ishihata_tech.hamiot_client.usecase
 import android.util.Log
 import com.ishihata_tech.hamiot_client.repo.FirebaseFunctionsRepository
 import javax.inject.Inject
+import javax.inject.Singleton
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
+@Singleton
 class GetDisplayNameImpl @Inject constructor(
     private val firebaseFunctionsRepository: FirebaseFunctionsRepository,
 ) : GetDisplayName {
@@ -13,7 +15,15 @@ class GetDisplayNameImpl @Inject constructor(
         private const val TAG = "GetDisplayNameImpl"
     }
 
+    /**
+     * キャッシュ
+     */
+    private val cache = mutableMapOf<String, String>()
+
     override suspend fun invoke(accountId: String): String? {
+        cache[accountId]?.also {
+            return it
+        }
         return suspendCoroutine { coroutine ->
             firebaseFunctionsRepository.functions
                 .getHttpsCallable("getPublicUserData")
@@ -27,6 +37,7 @@ class GetDisplayNameImpl @Inject constructor(
                             if (resultCode == "OK") {
                                 val displayName = (data["displayName"] as? String) ?: ""
                                 if (displayName.isNotEmpty()) {
+                                    cache[accountId] = displayName
                                     coroutine.resume(displayName)
                                     return@addOnCompleteListener
                                 }
