@@ -62,9 +62,9 @@ class FcmService : FirebaseMessagingService() {
 
         // 通知を表示する
         val (resIdTitle, resIdDescription) = if (type == "ReceiveAsset") {
-            Pair(R.string.notification_title_when_received, R.string.notification_title_when_sent)
+            Pair(R.string.notification_title_when_received, R.string.notification_destination_when_received)
         } else {
-            Pair(R.string.notification_destination_when_received, R.string.notification_destination_when_sent)
+            Pair(R.string.notification_title_when_sent, R.string.notification_destination_when_sent)
         }
         createNotification(
                 getString(resIdTitle),
