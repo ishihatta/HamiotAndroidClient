@@ -3,7 +3,9 @@ package com.ishihata_tech.hamiot_client.usecase
 import android.util.Log
 import com.ishihata_tech.hamiot_client.Constants
 import com.ishihata_tech.hamiot_client.repo.UserAccountRepository
+import iroha.protocol.Queries
 import jp.co.soramitsu.iroha.java.Query
+import jp.co.soramitsu.iroha.java.QueryBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -21,7 +23,17 @@ class GetAssetTransactionsImpl @Inject constructor(
             // Create query
             val myAccountId = userAccountRepository.accountId
             val query = Query.builder(userAccountRepository.accountId, 1)
-                    .getAccountAssetTransactions(myAccountId, Constants.ASSET_ID, PAGE_SIZE, firstHash, null)
+                    .getAccountAssetTransactions(
+                        myAccountId,
+                        Constants.ASSET_ID,
+                        PAGE_SIZE, firstHash,
+                        QueryBuilder.Ordering().apply {
+                            addFieldOrdering(
+                                Queries.Field.kCreatedTime,
+                                Queries.Direction.kDescending
+                            )
+                        }
+                    )
                     .buildSigned(userAccountRepository.keyPair)
 
             // Execute the query
