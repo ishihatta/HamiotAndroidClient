@@ -37,3 +37,10 @@ HamIOT はブロックチェーンの学習の一貫として開発した、小�
 - Navigation with safe args
 - Data binding
 - Dagger Hilt
+
+## デモ
+エミュレータで送金操作しているときの動画です。送金完了と同時に受け取り側の端末にも通知が行き、自動的に残高が変化することが分かります。
+
+（エミュレータの問題でQRコードのスキャンに時間がかかっていますが実機だとこんなにかかりません）
+
+![送金時の動画](https://user-images.githubusercontent.com/40629744/117840640-50d7a080-b2b7-11eb-8755-11df12d8c22f.gif)
