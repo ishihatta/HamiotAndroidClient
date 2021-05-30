@@ -113,8 +113,8 @@ class HistoryFragment : Fragment() {
             return when (getItemViewType(position)) {
                 VIEW_TYPE_TRANSACTION -> {
                     val row = getItem(position)
-                    convertView ?: LayoutInflater.from(parent.context)
-                        .inflate(R.layout.list_item_transaction, parent, false).apply {
+                    (convertView ?: LayoutInflater.from(parent.context)
+                        .inflate(R.layout.list_item_transaction, parent, false)).apply {
                             findViewById<TextView>(R.id.text_time).text = row.time
                             findViewById<TextView>(R.id.text_direction).setText(
                                 if (row.isReceived) R.string.received else R.string.sent)
@@ -123,8 +123,8 @@ class HistoryFragment : Fragment() {
                         }
                 }
                 else -> {
-                    convertView ?: LayoutInflater.from(parent.context)
-                        .inflate(R.layout.list_item_next, parent, false).apply {
+                    (convertView ?: LayoutInflater.from(parent.context)
+                        .inflate(R.layout.list_item_next, parent, false)).apply {
                             findViewById<Button>(R.id.button_next).setOnClickListener {
                                 viewModel.loadPage()
                             }
