@@ -1,6 +1,5 @@
 package com.ishihata_tech.hamiot_client.ui.main_menu
 
-import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -21,7 +20,6 @@ class MainMenuViewModel @Inject constructor(
         private val getBalance: GetBalance,
         private val getDisplayName: GetDisplayName,
         private val userAccountRepository: UserAccountRepository,
-        private val backupAccount: BackupAccount,
         private val setIrohaAccountDetail: SetIrohaAccountDetail,
 ) : ViewModel() {
     companion object {
@@ -148,12 +146,5 @@ class MainMenuViewModel @Inject constructor(
         } else {
             _errorMessage.emit(R.string.error_network)
         }
-    }
-
-    /**
-     * アカウントデータを保存する
-     */
-    fun backupAccount(uri: Uri): Boolean {
-        return backupAccount.invoke(uri)
     }
 }

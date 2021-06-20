@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable name="viewModel"
+            type="com.ishihata_tech.hamiot_client.ui.backup_account.BackupAccountDialogViewModel"/>
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:orientation="vertical">
+
+        <TextView
+            style="?android:textAppearanceMedium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/backup_account_description" />
+
+        <EditText
+            android:id="@+id/edit_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:inputType="textPassword"
+            android:autofillHints="password"
+            android:text="@={viewModel.password}"
+            android:hint="@string/backup_account_input_password" />
+
+        <EditText
+            android:id="@+id/edit_password_confirm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:autofillHints="password"
+            android:text="@={viewModel.passwordConfirm}"
+            android:hint="@string/backup_account_repeat_password" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="end"
+            android:orientation="horizontal">
+
+            <Button
+                style="?android:attr/buttonBarNegativeButtonStyle"
+                android:id="@+id/button_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cancel" />
+
+            <Button
+                style="?android:attr/buttonBarPositiveButtonStyle"
+                android:id="@+id/button_ok"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="@string/ok"/>
+        </LinearLayout>
+
+    </LinearLayout>
+</layout>

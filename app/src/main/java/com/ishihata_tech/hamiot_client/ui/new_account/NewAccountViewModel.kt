@@ -91,8 +91,8 @@ class NewAccountViewModel @Inject constructor(
      * @param uri 読み込み先
      * @return 成功したらtrue, 失敗したらfalse
      */
-    fun restoreAccount(uri: Uri) = viewModelScope.launch {
-        if (!restoreAccount.invoke(uri)) {
+    fun restoreAccount(uri: Uri, password: String) = viewModelScope.launch {
+        if (!restoreAccount.invoke(uri, password)) {
             _errorMessage.emit(R.string.error_restore_account)
             return@launch
         }

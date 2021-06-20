@@ -1,6 +1,5 @@
 package com.ishihata_tech.hamiot_client.ui.main_menu
 
-import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -10,8 +9,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.Toast
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -24,12 +21,12 @@ import com.google.zxing.integration.android.IntentIntegrator
 import com.ishihata_tech.hamiot_client.Constants
 import com.ishihata_tech.hamiot_client.R
 import com.ishihata_tech.hamiot_client.databinding.MainMenuFragmentBinding
+import com.ishihata_tech.hamiot_client.ui.backup_account.BackupAccountDialogFragment
 import com.ishihata_tech.hamiot_client.ui.common.ProgressDialogFragment
 import com.journeyapps.barcodescanner.BarcodeEncoder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-
 
 @AndroidEntryPoint
 class MainMenuFragment : Fragment(), LogoutDialogFragment.Listener {
@@ -52,27 +49,6 @@ class MainMenuFragment : Fragment(), LogoutDialogFragment.Listener {
     private val viewModel: MainMenuViewModel by viewModels()
     private val localBroadcastManager by lazy { LocalBroadcastManager.getInstance(requireContext()) }
     private val refreshBalanceBroadcastReceiver = RefreshBalanceBroadcastReceiver()
-
-    /**
-     * アカウントのバックアップ先選択画面のコールバック
-     */
-    private val filePickerCallback =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult? ->
-                val uri = result?.data?.data
-                if (result?.resultCode == Activity.RESULT_OK && uri != null) {
-                    if (viewModel.backupAccount(uri)) {
-                        // 成功
-                        BackupSuccessDialogFragment().showNow(childFragmentManager, BACKUP_DIALOG_TAG)
-                    } else {
-                        // 失敗
-                        Toast.makeText(
-                                requireContext(),
-                                R.string.error_backup_account,
-                                Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }
-            }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -205,11 +181,7 @@ class MainMenuFragment : Fragment(), LogoutDialogFragment.Listener {
                 true
             }
             R.id.item_backup -> {
-                filePickerCallback.launch(Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
-                    addCategory(Intent.CATEGORY_OPENABLE)
-                    type = "text/json"
-                    putExtra(Intent.EXTRA_TITLE, "hamiot_account.json")
-                })
+                BackupAccountDialogFragment().showNow(childFragmentManager, BACKUP_DIALOG_TAG)
                 true
             }
             R.id.item_logout -> {

@@ -4,9 +4,12 @@ import android.content.Context
 import android.net.Uri
 import android.util.Log
 import com.ishihata_tech.hamiot_client.repo.UserAccountRepository
+import com.ishihata_tech.hamiot_client.util.KeyEncryptor
 import dagger.hilt.android.qualifiers.ApplicationContext
 import org.json.JSONObject
+import org.spongycastle.util.encoders.Hex
 import java.nio.charset.StandardCharsets
+import java.util.*
 import javax.inject.Inject
 
 class BackupAccountImpl @Inject constructor(
@@ -17,11 +20,19 @@ class BackupAccountImpl @Inject constructor(
         private const val TAG = "BackupAccountImpl"
     }
 
-    override fun invoke(uri: Uri): Boolean {
+    override fun invoke(uri: Uri, password: String): Boolean {
+        // 秘密鍵を暗号化する
+        val encryptedPrivateKey = Base64.getEncoder().encodeToString(
+            KeyEncryptor.encrypt(
+                Hex.decode(userAccountRepository.privateKey),
+                password
+            )
+        )
+
         // バックアップデータの作成
         val json = JSONObject().apply {
             put("publicKey", userAccountRepository.publicKey)
-            put("privateKey", userAccountRepository.privateKey)
+            put("privateKey", encryptedPrivateKey)
             put("accountId", userAccountRepository.accountId)
             put("displayName", userAccountRepository.displayName)
             put("irohaAddress", userAccountRepository.irohaAddress)

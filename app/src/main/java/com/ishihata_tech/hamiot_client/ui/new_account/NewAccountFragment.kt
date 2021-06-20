@@ -16,6 +16,7 @@ import androidx.navigation.fragment.findNavController
 import com.ishihata_tech.hamiot_client.R
 import com.ishihata_tech.hamiot_client.databinding.NewAccountFragmentBinding
 import com.ishihata_tech.hamiot_client.ui.common.ProgressDialogFragment
+import com.ishihata_tech.hamiot_client.ui.restore_account.RestoreAccountDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -24,6 +25,7 @@ import kotlinx.coroutines.launch
 class NewAccountFragment : Fragment() {
     companion object {
         private const val PROGRESS_DIALOG_TAG = "progressDialog"
+        private const val RESTORE_ACCOUNT_DIALOG_TAG = "restoreAccountDialog"
     }
 
     private val viewModel: NewAccountViewModel by viewModels()
@@ -32,7 +34,16 @@ class NewAccountFragment : Fragment() {
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult? ->
                 val uri = result?.data?.data
                 if (result?.resultCode == Activity.RESULT_OK && uri != null) {
-                    viewModel.restoreAccount(uri)
+                    // ファイル選択が終わったらパスワード入力ダイアログを表示する
+                    childFragmentManager.setFragmentResultListener(
+                        RestoreAccountDialogFragment.REQUEST_KEY,
+                        this
+                    ) { _, bundle ->
+                        bundle.getString("password")?.also { password ->
+                            viewModel.restoreAccount(uri, password)
+                        }
+                    }
+                    RestoreAccountDialogFragment().showNow(childFragmentManager, RESTORE_ACCOUNT_DIALOG_TAG)
                 }
             }
 

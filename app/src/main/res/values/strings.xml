@@ -41,4 +41,11 @@
     <string name="main_menu_item_history">History</string>
     <string name="main_menu_item_backup">Backup account</string>
     <string name="main_menu_item_logout">Logout</string>
+
+    <string name="backup_account_description">Input password for encrypting your private key.</string>
+    <string name="backup_account_input_password">Input password</string>
+    <string name="backup_account_repeat_password">Repeat password</string>
+
+    <string name="restore_account_description">Input password for decrypting your private key.</string>
+    <string name="restore_account_input_password">Input password</string>
 </resources>
