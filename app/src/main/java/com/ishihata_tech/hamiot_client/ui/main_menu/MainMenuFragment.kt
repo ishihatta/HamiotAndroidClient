@@ -140,6 +140,11 @@ class MainMenuFragment : Fragment(), LogoutDialogFragment.Listener {
             IntentIntegrator.forSupportFragment(this@MainMenuFragment).initiateScan()
         }
 
+        // 造幣コマンドの有無の監視
+        viewModel.showMakeMoneyCommand.observe(viewLifecycleOwner) {
+            requireActivity().invalidateOptionsMenu()
+        }
+
         return binding.root
     }
 
@@ -173,8 +178,18 @@ class MainMenuFragment : Fragment(), LogoutDialogFragment.Listener {
         inflater.inflate(R.menu.main_menu, menu)
     }
 
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        super.onPrepareOptionsMenu(menu)
+        menu.findItem(R.id.item_make_money).isVisible = viewModel.showMakeMoneyCommand.value == true
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
+            R.id.item_make_money -> {
+                findNavController().navigate(
+                    MainMenuFragmentDirections.actionMainMenuFragmentToAddAssetFragment())
+                true
+            }
             R.id.item_history -> {
                 findNavController().navigate(
                     MainMenuFragmentDirections.actionMainMenuFragmentToHistoryFragment())

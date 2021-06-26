@@ -21,6 +21,7 @@ class MainMenuViewModel @Inject constructor(
         private val getDisplayName: GetDisplayName,
         private val userAccountRepository: UserAccountRepository,
         private val setIrohaAccountDetail: SetIrohaAccountDetail,
+        private val getOwnAccountRoles: GetOwnAccountRoles,
 ) : ViewModel() {
     companion object {
         private const val TAG = "MainMenuViewModel"
@@ -54,6 +55,10 @@ class MainMenuViewModel @Inject constructor(
     private val _transferAccountIdAndDisplayName = MutableSharedFlow<Pair<String, String>>()
     val transferAccountIdAndDisplayName: SharedFlow<Pair<String, String>> = _transferAccountIdAndDisplayName
 
+    // 造幣コマンドの有無
+    private val _showMakeMoneyCommand = MutableLiveData(false)
+    val showMakeMoneyCommand: LiveData<Boolean> = _showMakeMoneyCommand
+
     // 残高の取得中はtrue
     private var isRefreshingBalance = false
 
@@ -69,7 +74,14 @@ class MainMenuViewModel @Inject constructor(
         }
 
     init {
+        // 表示名をセット
         _displayName.value = userAccountRepository.displayName
+
+        // 造幣コマンドの表示/非表示
+        viewModelScope.launch {
+            _showMakeMoneyCommand.value =
+                getOwnAccountRoles.invoke()?.contains("money_creator") ?: false
+        }
     }
 
     /**

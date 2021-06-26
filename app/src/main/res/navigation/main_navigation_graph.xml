@@ -23,6 +23,13 @@
             app:exitAnim="@anim/nav_slide_exit_anim"
             app:popEnterAnim="@anim/nav_slide_pop_enter_anim"
             app:popExitAnim="@anim/nav_slide_pop_exit_anim" />
+        <action
+            android:id="@+id/action_mainMenuFragment_to_addAssetFragment"
+            app:destination="@id/addAssetFragment"
+            app:enterAnim="@anim/nav_slide_enter_anim"
+            app:exitAnim="@anim/nav_slide_exit_anim"
+            app:popEnterAnim="@anim/nav_slide_pop_enter_anim"
+            app:popExitAnim="@anim/nav_slide_pop_exit_anim" />
     </fragment>
     <fragment
         android:id="@+id/newAccountFragment"
@@ -54,4 +61,9 @@
         android:name="com.ishihata_tech.hamiot_client.ui.history.HistoryFragment"
         android:label="history_fragment"
         tools:layout="@layout/history_fragment" />
+    <fragment
+        android:id="@+id/addAssetFragment"
+        android:name="com.ishihata_tech.hamiot_client.ui.add_asset.AddAssetFragment"
+        android:label="add_asset_fragment"
+        tools:layout="@layout/add_asset_fragment" />
 </navigation>

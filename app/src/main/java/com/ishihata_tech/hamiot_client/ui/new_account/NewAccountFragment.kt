@@ -107,7 +107,7 @@ class NewAccountFragment : Fragment() {
         binding.buttonRestore.setOnClickListener {
             filePickerCallback.launch(Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
                 addCategory(Intent.CATEGORY_OPENABLE)
-                type = "text/json"
+                type = "*/*"
             })
         }
 

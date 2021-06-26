@@ -2,6 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/item_make_money"
+        android:title="@string/main_menu_item_make_money"
+        android:visible="false" />
+    <item
         android:id="@+id/item_history"
         android:title="@string/main_menu_item_history" />
     <item

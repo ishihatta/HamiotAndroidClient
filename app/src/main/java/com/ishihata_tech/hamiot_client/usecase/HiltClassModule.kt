@@ -76,6 +76,16 @@ abstract class HiltClassModule {
 
     @Binds
     abstract fun bindGetAssetTransactions(
-            getAssetTransactionsImpl: GetAssetTransactionsImpl
+        getAssetTransactionsImpl: GetAssetTransactionsImpl
     ): GetAssetTransactions
+
+    @Binds
+    abstract fun bindGetOwnAccountRoles(
+        getOwnAccountRolesImpl: GetOwnAccountRolesImpl
+    ): GetOwnAccountRoles
+
+    @Binds
+    abstract fun bindAddAssetQuantity(
+        addAssetQuantityImpl: AddAssetQuantityImpl
+    ): AddAssetQuantity
 }

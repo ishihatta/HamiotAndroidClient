@@ -14,6 +14,7 @@
     <string name="error_network">Network error</string>
     <string name="transfer_asset">Transfer asset</string>
     <string name="transfer_to">Transfer to</string>
+    <string name="add_asset">Make asset</string>
     <string name="amount">Amount</string>
     <string name="hmt">HMT</string>
     <string name="transfer">Transfer</string>
@@ -28,6 +29,7 @@
     <string name="error_create_account">Failure to create new account</string>
     <string name="error_invalid_amount">Amount is invalid</string>
     <string name="error_transfer">Failure to transfer</string>
+    <string name="error_add_asset">Failure to add asset</string>
     <string name="error_backup_account">Failure to backup account file</string>
     <string name="error_restore_account">Failure to restore account</string>
 
@@ -38,6 +40,7 @@
     <string name="notification_destination_when_received">Received %s HMT from %s</string>
     <string name="notification_destination_when_sent">Sent %s HMT to %s</string>
 
+    <string name="main_menu_item_make_money">Make asset</string>
     <string name="main_menu_item_history">History</string>
     <string name="main_menu_item_backup">Backup account</string>
     <string name="main_menu_item_logout">Logout</string>

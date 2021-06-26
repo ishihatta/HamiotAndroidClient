@@ -46,13 +46,16 @@ class RestoreAccountImpl @Inject constructor(
             val irohaAddress = json.getString("irohaAddress")
 
             // 秘密鍵の暗号化を復号する
-            val privateKey = Hex.toHexString(
-                KeyEncryptor.decrypt(
-                    Base64.getDecoder().decode(encryptedPrivateKey),
-                    password
+            val privateKey = if (encryptedPrivateKey.length == 64) {
+                encryptedPrivateKey
+            } else {
+                Hex.toHexString(
+                    KeyEncryptor.decrypt(
+                        Base64.getDecoder().decode(encryptedPrivateKey),
+                        password
+                    )
                 )
-            )
-            Log.d(TAG, "privateKey=$privateKey")
+            }
 
             userAccountRepository.publicKey = publicKey
             userAccountRepository.privateKey = privateKey
@@ -62,7 +65,7 @@ class RestoreAccountImpl @Inject constructor(
 
             true
         } catch (e: Exception) {
-            Log.e(TAG, "Failure to get parameters from backup file")
+            Log.e(TAG, "Failure to get parameters from backup file", e)
             false
         }
     }
